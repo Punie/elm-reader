@@ -3,12 +3,9 @@
     "name": "Punie/elm-reader",
     "summary": "Read configuration from an implicit environment",
     "license": "BSD-3-Clause",
-    "version": "1.0.0",
-    "source-directories": [
-        "src"
-    ],
+    "version": "1.0.1",
     "exposed-modules": [
-      "Reader"
+        "Reader"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
