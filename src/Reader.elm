@@ -97,7 +97,7 @@ with a single function.
 -}
 andMap : Reader env a -> Reader env (a -> b) -> Reader env b
 andMap =
-    flip ap
+    flip apply
 
 
 {-| Chain a Reader with a computation producing a Reader
@@ -119,8 +119,8 @@ join x =
 -- HELPERS
 
 
-ap : Reader env (a -> b) -> Reader env a -> Reader env b
-ap (Reader f) (Reader g) =
+apply : Reader env (a -> b) -> Reader env a -> Reader env b
+apply (Reader f) (Reader g) =
     Reader <| \env -> (f env (g env))
 
 
