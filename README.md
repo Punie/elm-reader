@@ -33,17 +33,26 @@ exclamation : String -> Reader Country String
 exclamation input =
     let
         localExclamation country =
-            if country == Spain then
-                "¡" ++ input ++ "!"
-            else
-                input ++ "!"
+            case country of
+                France ->
+                    input ++ " !"
+                Spain ->
+                    "¡" ++ input ++ "!"
+                USA ->
+                    input ++ "!"
     in
-      ask
-          |> andThen localExclamation
+        ask
+            |> andThen localExclamation
 
 
-run (greet "Elm" |> andThen exclamation) France == "Bonjour, Elm!"
-run (greet "Elm" |> andThen exclamation) Spain  == "¡Buenos Dìas, Elm!"
+greeting : String -> Reader Country String
+greeting name =
+    greet name |> andThen exclamation
+
+
+run (greeting "Elm") France == "Bonjour, Elm !"
+run (greeting "Elm") Spain  == "¡Buenos Dìas, Elm!"
+run (greeting "Elm") USA    == "Hello, Elm!"
 ```
 
 The `greet` function asks for the environment variable of type `Country` and transforms it to a `String`
