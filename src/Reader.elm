@@ -7,6 +7,10 @@ module Reader
         , local
         , asks
         , map
+        , map2
+        , map3
+        , map4
+        , map5
         , andMap
         , andThen
         , join
@@ -30,7 +34,7 @@ It is often viewed as a way to do dependency injection in FP.
 
 # Transformations and chaining
 
-@docs map, andMap, andThen, join
+@docs map, map2, map3, map4, map5, andMap, andThen, join
 
 -}
 
@@ -82,6 +86,62 @@ local f (Reader action) =
 map : (a -> b) -> Reader env a -> Reader env b
 map f (Reader g) =
     Reader (f << g)
+
+
+{-| -}
+map2 :
+    (a -> b -> c)
+    -> Reader env a
+    -> Reader env b
+    -> Reader env c
+map2 f x y =
+    map f x
+        |> andMap y
+
+
+{-| -}
+map3 :
+    (a -> b -> c -> d)
+    -> Reader env a
+    -> Reader env b
+    -> Reader env c
+    -> Reader env d
+map3 f x y z =
+    map f x
+        |> andMap y
+        |> andMap z
+
+
+{-| -}
+map4 :
+    (a -> b -> c -> d -> e)
+    -> Reader env a
+    -> Reader env b
+    -> Reader env c
+    -> Reader env d
+    -> Reader env e
+map4 f r1 r2 r3 r4 =
+    map f r1
+        |> andMap r2
+        |> andMap r3
+        |> andMap r4
+
+
+{-| -}
+map5 :
+    (a -> b -> c -> d -> e -> f)
+    -> Reader env a
+    -> Reader env b
+    -> Reader env c
+    -> Reader env d
+    -> Reader env e
+    -> Reader env f
+map5 f r1 r2 r3 r4 r5 =
+    map f r1
+        |> andMap r2
+        |> andMap r3
+        |> andMap r4
+        |> andMap r5
 
 
 {-| Apply a function wrapped in a Reader to a value wrapped in a Reader.
