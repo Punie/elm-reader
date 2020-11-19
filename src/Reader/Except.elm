@@ -1,7 +1,7 @@
 module Reader.Except exposing
     ( Except
     , succeed, fail
-    , map, andMap, andThen, join
+    , map, andMap, andThen, andResult, join
     )
 
 {-| Sometimes, you may want to build up a computation using `Reader env value` where
@@ -24,7 +24,7 @@ and provides some useful functions for mapping over or chaining such nested comp
 
 # Transformations and chaining
 
-@docs map, andMap, andThen, join
+@docs map, andMap, andThen, andResult, join
 
 -}
 
@@ -75,6 +75,13 @@ andMap v f =
 andThen : (a -> Except env err b) -> Except env err a -> Except env err b
 andThen f x =
     x |> Reader.andThen (unpack fail f)
+
+
+{-| Chain Except with a Result.
+-}
+andResult : (a -> Result err b) -> Except env err a -> Except env err b
+andResult f x =
+    x |> andThen (\v -> Reader.reader <| f v)
 
 
 {-| Discards one level of Except
