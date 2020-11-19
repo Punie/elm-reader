@@ -1,13 +1,8 @@
-module Reader.Except
-    exposing
-        ( Except
-        , succeed
-        , fail
-        , map
-        , andMap
-        , andThen
-        , join
-        )
+module Reader.Except exposing
+    ( Except
+    , succeed, fail
+    , map, andMap, andThen, join
+    )
 
 {-| Sometimes, you may want to build up a computation using `Reader env value` where
 the value is a result that may or may not fail. Elm already provides us with the
@@ -72,12 +67,12 @@ andMap v f =
         go k =
             v |> Reader.andThen (unpack fail (succeed << k))
     in
-        f |> Reader.andThen (unpack fail go)
+    f |> Reader.andThen (unpack fail go)
 
 
 {-| Chain Excepts together.
 -}
-andThen : (a -> Except env err a) -> Except env err a -> Except env err a
+andThen : (a -> Except env err b) -> Except env err a -> Except env err b
 andThen f x =
     x |> Reader.andThen (unpack fail f)
 

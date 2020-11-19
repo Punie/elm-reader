@@ -1,20 +1,8 @@
-module Reader
-    exposing
-        ( Reader
-        , run
-        , reader
-        , ask
-        , local
-        , asks
-        , map
-        , map2
-        , map3
-        , map4
-        , map5
-        , andMap
-        , andThen
-        , join
-        )
+module Reader exposing
+    ( Reader
+    , run, reader, ask, asks, local
+    , map, map2, map3, map4, map5, andMap, andThen, join
+    )
 
 {-| Basically, a `Reader` is just a wrapper for a function type.
 It is quite handy in that it solves the problem to manually having to
@@ -56,15 +44,15 @@ run (Reader f) =
 {-| Construct a Reader that will produce the value provided, no matter the environment.
 -}
 reader : value -> Reader env value
-reader x =
-    Reader <| always x
+reader =
+    Reader << always
 
 
 {-| Fetch the value of the environment.
 -}
 ask : Reader env env
 ask =
-    Reader <| identity
+    Reader identity
 
 
 {-| Embed a function in a Reader
@@ -151,8 +139,7 @@ with a single function.
     map (\x y z -> ( x, y, z )) (reader 'x')
         |> andMap (reader 42)
         |> andMap (reader "fourty two")
-
-        == reader ('x', 42, "fourty two")
+        == reader ( 'x', 42, "fourty two" )
 
 -}
 andMap : Reader env a -> Reader env (a -> b) -> Reader env b
@@ -181,17 +168,16 @@ join x =
 
 apply : Reader env (a -> b) -> Reader env a -> Reader env b
 apply (Reader f) (Reader g) =
-    Reader <| \env -> (f env (g env))
+    Reader <| \env -> f env (g env)
 
 
 bind : Reader env a -> (a -> Reader env b) -> Reader env b
 bind x f =
     Reader <|
-        (\r ->
+        \r ->
             run x r
                 |> f
-                |> (flip run) r
-        )
+                |> flip run r
 
 
 flip : (a -> b -> c) -> b -> a -> c
